@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\NewsHidden;
 use App\Models\News;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,23 @@ Route::get('/news/create-test', function () {
     $news->title = 'Test new ttile';
     $news->body = 'Test new body';
     $news->save();
+    
     return $news;
 });
+
+Route::get('/news/{id}/hide', function ($id) {
+    $news = News::findOrFail($id);
+    $news->hidden - true;
+    $news->save();
+    NewsHidden::dispatch($news);
+    return 'News hidden';
+});
+
+Route::get('/news/create-test', function () {
+    $news = new News;
+    $news->title = 'test-news-title';
+    $news->body = 'Test new body';
+    $news->save();
+    return $news;
+});
+
